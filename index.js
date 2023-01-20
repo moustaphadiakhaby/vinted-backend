@@ -1,10 +1,17 @@
-require("dotenv").config();
 const express = require("express");
+require("dotenv").config();
 const mongoose = require("mongoose");
+const cloudinary = require("cloudinary").v2;
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 mongoose.set("strictPopulate", false);
 mongoose.set("strictQuery", false);
-mongoose.connect("mongodb://localhost:27017/vinted");
+mongoose.connect(process.env.MONGODB_URI);
 const cors = require("cors");
 
 const app = express();
@@ -22,6 +29,6 @@ app.all("*", (req, res) => {
   res.status(404).json({ message: "This route does not exist" });
 });
 
-app.listen(3000, () => {
+app.listen(process.env.PORT, () => {
   console.log("Server has been started 🚀🥳");
 });

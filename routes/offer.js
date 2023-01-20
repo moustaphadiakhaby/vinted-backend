@@ -5,12 +5,6 @@ const fileUpload = require("express-fileupload");
 const isAuthenticated = require("../middlewares/isAuthenticated");
 const cloudinary = require("cloudinary").v2;
 
-cloudinary.config({
-  cloud_name: "dspcrecgz",
-  api_key: "195624299323112",
-  api_secret: "6I8CZ9676j9hRNHyYh4C2YTVUEQ",
-});
-
 const convertToBase64 = (file) => {
   return `data:${file.mimetype};base64,${file.data.toString("base64")}`;
 };
@@ -60,17 +54,18 @@ router.post(
             EMPLACEMENT: city,
           },
         ],
-        owner: req.user._id,
+        owner: _id,
       });
 
-      const result = await cloudinary.uploader.upload(
-        convertToBase64(req.files.picture),
-        {
-          folder: "/vinted/offers/" + newOffer._id,
-        }
-      );
-
-      newOffer.product_image = result;
+      if (req.files) {
+        const result = await cloudinary.uploader.upload(
+          convertToBase64(req.files.picture),
+          {
+            folder: "/vinted/offers/" + newOffer._id,
+          }
+        );
+        newOffer.product_image = result;
+      }
 
       await newOffer.save();
 
@@ -81,7 +76,7 @@ router.post(
 
       res.json(response);
     } catch (error) {
-      res.status(400).json({ message: error.message });
+      res.status(400).json({ error: error.message });
     }
   }
 );

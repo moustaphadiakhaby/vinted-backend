@@ -7,12 +7,6 @@ const uid2 = require("uid2");
 const fileUpload = require("express-fileupload");
 const cloudinary = require("cloudinary").v2;
 
-cloudinary.config({
-  cloud_name: "dspcrecgz",
-  api_key: "195624299323112",
-  api_secret: "6I8CZ9676j9hRNHyYh4C2YTVUEQ",
-});
-
 const convertToBase64 = (file) => {
   return `data:${file.mimetype};base64,${file.data.toString("base64")}`;
 };
@@ -36,7 +30,7 @@ router.post("/user/signup", fileUpload(), async (req, res) => {
     }
 
     if (account) {
-      return res.json({ message: "This email has already used" });
+      return res.json({ message: "This email is already used" });
     }
 
     const result = await cloudinary.uploader.upload(
