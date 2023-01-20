@@ -1,2 +1,1 @@
 # vinted-backend
-# vinted-backend
